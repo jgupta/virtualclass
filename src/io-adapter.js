@@ -62,7 +62,6 @@ var ioAdapter = {
     this.adapterMustData[this.serial] = { type: 'broadcast', m: msg };
     this.send(msg);
     ioStorage.dataAdapterStore({ type: 'broadcast', user: wbUser.id, m: msg }, this.serial);
-    //ioStorage.storeCacheAllData(msg, [virtualclass.gObj.uid, this.serial]);
   },
 
   send(msg) {

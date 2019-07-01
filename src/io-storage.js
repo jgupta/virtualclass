@@ -35,15 +35,6 @@ var ioStorage = {
     virtualclass.storage.dataExecutedStoreAll(JSON.stringify(DataExecutedAll), serialKeyWithUser);
   },
 
-  // receiveStoreCacheAllData (data) {
-  //   if (typeof data.m === 'object') {
-  //     if (data.m.hasOwnProperty('serial')) {
-  //       this.storeCacheAllData(JSON.stringify(data.m), [data.user.userid, data.m.serial]);
-  //     } else if (data.m.hasOwnProperty('userSerial')){
-  //       this.storeCacheInData(data.m, [data.user.userid, data.m.userSerial]);
-  //     }
-  //   }
-  // },
   storeCacheAllDataSend(data, key) {
     const msg = {
       user: { userid: wbUser.id },

@@ -175,10 +175,12 @@
     storeCacheAll(data, serialKey) {
       if (virtualclass.config.makeWebSocketReady) {
         const tx = that.db.transaction('cacheAll', 'readwrite');
+        serialKey[0] = parseInt(serialKey[0]);
+        serialKey[1] = parseInt(serialKey[1]);
 
         tx.store.put(data, serialKey);
         tx.done.then(() => {
-          console.log('success')
+          console.log('success');
         }, () => {
           console.log('failure');
         });
@@ -274,7 +276,7 @@
           if (!Array.isArray(mycacheQueue[cursor.key[0]])) {
             mycacheQueue[cursor.key[0]] = [];
           }
-          mycacheQueue[cursor.key[0]][cursor.key[1]] = cursor.value;
+          mycacheQueue[parseInt(cursor.key[0])][parseInt(cursor.key[1])] = cursor.value;
           // if (!Array.isArray(mycacheQueue[cursor.key[0] + cursor.key[1]])) {
           //   mycacheQueue[cursor.key[0] + cursor.key[1]] = [];
           // }
@@ -286,17 +288,19 @@
         cursor = await cursor.continue();
       }
       // setTimeout(() => {
-        if (mycacheQueue.length > 0) {
-          for (const key1 in mycacheQueue) {
-            for (const key2 in mycacheQueue[key1]) {
-              ioAdapter.serial = key2;
-              ioInit.onmessage({ data: { msg: mycacheQueue[key1][key2], cmd: 'receivedJson' } });
+      if (mycacheQueue.length > 0) {
+        for (const key1 in mycacheQueue) {
+          for (const key2 in mycacheQueue[key1]) {
+            if (key1 === virtualclass.gObj.uid) {
+              ioAdapter.serial = parseInt(key2, 10);
             }
+            ioInit.onmessage({ data: { msg: mycacheQueue[key1][key2], cmd: 'receivedJson' } });
           }
         }
+      }
 
-        virtualclass.config.makeWebSocketReady = true;
-        virtualclass.makeReadySocket();
+      virtualclass.config.makeWebSocketReady = true;
+      virtualclass.makeReadySocket();
       // }, 5000);
 
 

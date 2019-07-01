@@ -1,7 +1,7 @@
 var ioMissingPackets = {
   // Variables for broadcast messages
   executedStore: [], // It contains all executed data by current user (at receiver side), used by ahead packets
-  executedSerial: (localStorage.getItem('executedSerial') != null) ? JSON.parse(localStorage.getItem('executedSerial')) : {},
+  executedSerial: {},
   missRequest: [], // Status for Request for missed packets
   aheadPackets: [],
   missRequestFlag: 0, // Flag to show status of Miss Packet request
@@ -95,7 +95,8 @@ var ioMissingPackets = {
         console.log(`UID ${uid} Object with Serial ${msg.m.serial}`);
         this.executedSerial[uid] = msg.m.serial;
         this.executedStore[uid][msg.m.serial] = msg;
-        ioStorage.dataExecutedStoreAll(msg, `${uid}_${msg.m.serial}`);
+        // ioStorage.dataExecutedStoreAll(msg, `${uid}_${msg.m.serial}`);
+        ioStorage.storeCacheAllData(msg, [msg.user.userid, msg.m.serial]);
         io.onRecJson(msg);
       } else if (msg.m.serial > (this.executedSerial[uid] + 1)) {
         // debugger;
@@ -131,6 +132,7 @@ var ioMissingPackets = {
         // Everything is good and in order
         console.log(`UID ${uid} Object with userSerial ${msg.m.userSerial}`);
         this.executedUserSerial[uid] = msg.m.userSerial;
+        ioStorage.storeCacheInData(msg, [uid, msg.m.userSerial]);
         io.onRecJson(msg);
         this.executedUserStore[uid][msg.m.userSerial] = msg;
         ioStorage.dataExecutedStoreAll(msg, `${uid}_${msg.m.userSerial}`);
@@ -350,6 +352,7 @@ var ioMissingPackets = {
 
           msg.m.data[i].user = msg.user;
           this.executedStore[uid][msg.m.data[i].m.serial] = msg.m.data[i];
+          ioStorage.storeCacheAllData(msg.m.data[i], [uid, msg.m.data[i].m.serial]);
           try {
             console.log(`UID ${uid} Object with Serial ${msg.m.data[i].m.serial}`);
 

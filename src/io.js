@@ -266,11 +266,6 @@ var io = {
   },
 
   onRecJsonIndividual(receivemsg) {
-    // if (virtualclass.config.makeWebSocketReady) {
-    //   ioStorage.receiveStoreCacheAllData(receivemsg);
-    // }
-
-
     let userto = '';
     switch (receivemsg.type) {
       case 'joinroom':
@@ -457,9 +452,6 @@ var ioInit = {
 
           if (msg.hasOwnProperty('m')) {
             if (msg.m.hasOwnProperty('serial')) {
-              if (virtualclass.config.makeWebSocketReady) {
-                ioStorage.storeCacheAllData(msg, [msg.user.userid, msg.m.serial]);
-              }
               virtualclass.ioEventApi.connectionopen(e.data.msg);
               await ioMissingPackets.checkMissing(msg);
             } else if (msg.m.hasOwnProperty('reqMissPac')) {
